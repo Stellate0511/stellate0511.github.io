@@ -1,13 +1,136 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>点缀星空的网页 Stellate's Websites</title>
 </head>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f7f9fc;
+    margin: 0;
+    color: #333;
+  }
+
+  header {
+    background-color: #1976d2;
+    color: white;
+    text-align: center;
+    padding: 1em;
+  }
+
+  #status {
+    margin-top: 0.5em;
+    font-size: 0.9em;
+  }
+
+  button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #1976d2;
+    background-color: white;
+    border: 1px solid #90caf9;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #e0ecff;
+  }
+
+  /* 激活样式 */
+  #embedTab.active,
+  #extractTab.active {
+    background-color: #1976d2;
+    color: white;
+    border-color: #1976d2;
+    box-shadow: 0 0 4px #1976d280;
+  }
+
+  .tab {
+    display: none;
+    padding: 30px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .tab.active {
+    display: block;
+  }
+
+  .form-group {
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group button,
+  .form-group label {
+    font-size: 1em;
+    margin: 5px auto;
+  }
+
+  .inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  canvas {
+    max-width: 90%;
+    width: 300px;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+  }
+
+  footer {
+    background-color: #f1f1f1;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9em;
+    color: #777;
+  }
+
+  .file-label {
+    display: inline-block;
+    background-color: #1976d2;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .file-label:hover {
+    background-color: #125ba6;
+  }
+
+  #filesInputName,
+  #previewImageName {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+  }
+</style>
+</head>
+
 <body>
-  <h1>点缀星空的网页</h1>
-  <button onclick="location.href='/DSIE/'">差值分离图像加密工具</button>
-  <button onclick="location.href='/QRepository/'">二维码压缩包</button>
+  <header>
+    <h1>点缀星空的网页</h1>
+  </header>
+  <div class="form-group">
+    <button onclick="location.href='/DSIE/'">差值分离图像加密工具</button>
+    <button onclick="location.href='/QRepository/'" style="margin-left:10px">二维码压缩包</button>
+  </div>
 </body>
+
 </html>
