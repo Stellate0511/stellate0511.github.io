@@ -337,12 +337,50 @@
                 </div>
             </section>
 
+            <section class="card social-section">
+                <div class="card-icon">🌐</div>
+                <h3>社交平台</h3>
+                <div class="btn-group">
+                    <a href="https://space.bilibili.com/1792961650" class="btn">
+                        <span class="btn-title">Bilibili</span>
+                        <span class="btn-subtitle">不会特效の点缀星空</span>
+                    </a>
+                    <a href="javascript:void(0)" class="btn" onclick="copyQQ('3516473554', this)">
+                        <span class="btn-title">QQ</span>
+                        <span class="btn-subtitle">3516473554 (点击复制)</span>
+                    </a>
+                </div>
+            </section>
+
         </div>
 
         <footer class="footer">
             <p>© 2025 点缀星空 <span>♥</span></p>
         </footer>
     </div>
+    <script>
+        function copyQQ(qqNumber, element) {
+            // 执行复制操作
+            navigator.clipboard.writeText(qqNumber).then(() => {
+                // 获取副标题元素
+                const subtitle = element.querySelector('.btn-subtitle');
+                const originalText = subtitle.innerText;
+
+                // 变换文字反馈
+                subtitle.innerText = "✨ 已成功复制到剪贴板";
+                subtitle.style.color = "var(--secondary-accent)";
+
+                // 1.5秒后恢复原状
+                setTimeout(() => {
+                    subtitle.innerText = originalText;
+                    subtitle.style.color = "";
+                }, 1500);
+            }).catch(err => {
+                console.error('复制失败: ', err);
+                alert('复制失败，请手动输入：' + qqNumber);
+            });
+        }
+    </script>
 </body>
 
 </html>
