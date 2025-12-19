@@ -1,136 +1,391 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>点缀星空的网页 Stellate's Websites</title>
-</head>
-<style>
-  body {
-    font-family: "Segoe UI", sans-serif;
-    background-color: #f7f9fc;
-    margin: 0;
-    color: #333;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星空的角落</title>
+    <style>
+        /* --- 全局设定 --- */
+        :root {
+            --bg-color: #fcfcfc;
+            --primary-accent: #a3b1ff;
+            /* 淡蓝紫：星空 */
+            --primary-dark: #7e8ce0;
+            /* 深一点的紫，用于文字 */
+            --secondary-accent: #ffb7c5;
+            /* 樱花粉：点缀 */
+            --text-main: #555c66;
+            --text-light: #9aa5b1;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 8px 32px rgba(163, 177, 255, 0.15);
+        }
 
-  header {
-    background-color: #1976d2;
-    color: white;
-    text-align: center;
-    padding: 1em;
-  }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  #status {
-    margin-top: 0.5em;
-    font-size: 0.9em;
-  }
+        body {
+            font-family: 'Nunito', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-  button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    font-size: 1em;
-    color: #1976d2;
-    background-color: white;
-    border: 1px solid #90caf9;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
+        /* --- 背景装饰：纯CSS画的小星星 --- */
+        .stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                radial-gradient(#e0e7ff 2px, transparent 2px),
+                radial-gradient(#fce7f3 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.6;
+        }
 
-  button:hover {
-    background-color: #e0ecff;
-  }
+        /* --- 主容器 --- */
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: 40px 20px;
+            text-align: center;
+        }
 
-  /* 激活样式 */
-  #embedTab.active,
-  #extractTab.active {
-    background-color: #1976d2;
-    color: white;
-    border-color: #1976d2;
-    box-shadow: 0 0 4px #1976d280;
-  }
+        /* --- 头部个人信息 --- */
+        .header {
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
 
-  .tab {
-    display: none;
-    padding: 30px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-  }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: var(--shadow);
+            object-fit: cover;
+            margin-bottom: 15px;
+            background-color: #eef2ff;
+            /* 这里的图片链接记得换成你自己的 */
+            background-image: url('avatar.jpg');
+            background-size: cover;
+            background-position: center;
+            display: inline-block;
+        }
 
-  .tab.active {
-    display: block;
-  }
+        .name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
 
-  .form-group {
-    margin: 15px 0;
-    text-align: center;
-  }
+        .bio {
+            font-size: 0.95rem;
+            color: var(--text-light);
+        }
 
-  .form-group input,
-  .form-group textarea,
-  .form-group button,
-  .form-group label {
-    font-size: 1em;
-    margin: 5px auto;
-  }
+        /* --- 分区布局 --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* 稍微加宽了一点以容纳长标题 */
+            gap: 25px;
+        }
 
-  .inline {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: center;
-  }
+        /* --- 卡片样式 --- */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 30px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-  canvas {
-    max-width: 90%;
-    width: 300px;
-    height: auto;
-    display: block;
-    margin: 20px auto;
-    border: 1px solid #ccc;
-  }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 45px rgba(163, 177, 255, 0.3);
+        }
 
-  footer {
-    background-color: #f1f1f1;
-    text-align: center;
-    padding: 10px;
-    font-size: 0.9em;
-    color: #777;
-  }
+        .card-icon {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            /* 给图标加一点微弱的浮动动画 */
+            animation: float 3s ease-in-out infinite;
+        }
 
-  .file-label {
-    display: inline-block;
-    background-color: #1976d2;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
+        @keyframes float {
 
-  .file-label:hover {
-    background-color: #125ba6;
-  }
+            0%,
+            100% {
+                transform: translateY(0);
+            }
 
-  #filesInputName,
-  #previewImageName {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #666;
-    text-align: center;
-  }
-</style>
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 25px;
+            color: var(--primary-accent);
+            font-weight: 700;
+        }
+
+        /* --- 按钮样式（核心修改部分） --- */
+        .btn-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            display: flex;
+            flex-direction: column;
+            /* 垂直排列主标题和副标题 */
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 14px 10px;
+            border-radius: 16px;
+            /* 方圆角更适合包含多行文字 */
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 按钮内的主标题 */
+        .btn-title {
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* 按钮内的副标题 */
+        .btn-subtitle {
+            color: var(--text-light);
+            font-size: 0.75rem;
+            font-weight: 400;
+            margin-top: 4px;
+            line-height: 1.2;
+            transition: color 0.2s ease;
+        }
+
+        /* 悬停效果 */
+        .btn:hover {
+            background-color: var(--primary-accent);
+            border-color: var(--primary-accent);
+            box-shadow: 0 6px 15px rgba(163, 177, 255, 0.35);
+            transform: scale(1.02);
+        }
+
+        .btn:hover .btn-title {
+            color: white;
+        }
+
+        .btn:hover .btn-subtitle {
+            color: rgba(255, 255, 255, 0.85);
+            /* 悬停时副标题变白 */
+        }
+
+        /* 针对不同分区的微调 */
+        .games-section .card-icon {
+            filter: hue-rotate(320deg);
+            /* 让游戏图标偏粉色 */
+        }
+
+        .games-section .btn:hover {
+            background-color: var(--secondary-accent);
+            border-color: var(--secondary-accent);
+            box-shadow: 0 6px 15px rgba(255, 183, 197, 0.4);
+        }
+
+        .social-section .btn:hover {
+            background-color: #95a5ff;
+            /* 比 primary-accent 稍微深一点，区分社交功能 */
+            border-color: #95a5ff;
+        }
+
+        /* --- 动画 --- */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- 页脚 --- */
+        .footer {
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: #b0b8c1;
+            letter-spacing: 1px;
+        }
+
+        .footer span {
+            color: var(--secondary-accent);
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .name {
+                font-size: 1.6rem;
+            }
+
+            .card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <header>
-    <h1>点缀星空的网页</h1>
-  </header>
-  <div class="form-group">
-    <button onclick="location.href='/DSIE/'">差值分离图像加密工具</button>
-    <button onclick="location.href='/QRepository/'" style="margin-left:10px">二维码压缩包</button>
-  </div>
+
+    <div class="stars-bg"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="avatar"></div>
+            <h1 class="name">点缀星空</h1>
+            <p class="bio">✨ 星光与逻辑交融的角落 ✨</p>
+        </header>
+
+        <div class="grid">
+
+            <section class="card">
+                <div class="card-icon">🧠</div>
+                <h3>算法工具</h3>
+                <div class="btn-group">
+                    <a href="/QRepository/" class="btn">
+                        <span class="btn-title">图灵箱</span>
+                        <span class="btn-subtitle">二维码压缩包</span>
+                    </a>
+                    <a href="/DSIE/" class="btn">
+                        <span class="btn-title">DSIE</span>
+                        <span class="btn-subtitle">差值分离图像加密/解密工具</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="card games-section">
+                <div class="card-icon">🎮</div>
+                <h3>游戏工坊</h3>
+                <div class="btn-group">
+                    <a href="/Project-24/" class="btn">
+                        <span class="btn-title">Project: 24</span>
+                        <span class="btn-subtitle">升级版24点游戏</span>
+                    </a>
+                    <a href="/GravityNexus/" class="btn">
+                        <span class="btn-title">重力枢纽 / Gravity Nexus</span>
+                        <span class="btn-subtitle">重力落子与 AP 点数博弈</span>
+                    </a>
+                    <a href="/Leap/" class="btn">
+                        <span class="btn-title">越日棋 / Leap</span>
+                        <span class="btn-subtitle">原创策略战棋</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-icon">🎵</div>
+                <h3>杂货铺</h3>
+                <div class="btn-group">
+                    <a href="/TENCMD/" class="btn">
+                        <span class="btn-title">处事十诫</span>
+                        <span class="btn-subtitle">星空运行目标算法</span>
+                    </a>
+                    <a href="/MCQ/" class="btn">
+                        <span class="btn-title">MCQ System</span>
+                        <span class="btn-subtitle">多选题练习系统</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="card social-section">
+                <div class="card-icon">🌐</div>
+                <h3>社交平台</h3>
+                <div class="btn-group">
+                    <a href="https://space.bilibili.com/1792961650" class="btn">
+                        <span class="btn-title">Bilibili</span>
+                        <span class="btn-subtitle">不会特效の点缀星空</span>
+                    </a>
+                    <a href="https://www.pixiv.net/users/96255778" class="btn">
+                        <span class="btn-title">Pixiv</span>
+                        <span class="btn-subtitle">点缀星空</span>
+                    </a>
+                    <a href="javascript:void(0)" class="btn" onclick="copyQQ('3516473554', this)">
+                        <span class="btn-title">QQ</span>
+                        <span class="btn-subtitle">3516473554 (点击复制)</span>
+                    </a>
+                </div>
+            </section>
+
+        </div>
+
+        <footer class="footer">
+            <p>© 2025 点缀星空 <span>♥</span></p>
+        </footer>
+    </div>
+    <script>
+        function copyQQ(qqNumber, element) {
+            // 执行复制操作
+            navigator.clipboard.writeText(qqNumber).then(() => {
+                // 获取副标题元素
+                const subtitle = element.querySelector('.btn-subtitle');
+                const originalText = subtitle.innerText;
+
+                // 变换文字反馈
+                subtitle.innerText = "✨ 已成功复制到剪贴板";
+                subtitle.style.color = "var(--secondary-accent)";
+
+                // 1.5秒后恢复原状
+                setTimeout(() => {
+                    subtitle.innerText = originalText;
+                    subtitle.style.color = "";
+                }, 1500);
+            }).catch(err => {
+                console.error('复制失败: ', err);
+                alert('复制失败，请手动输入：' + qqNumber);
+            });
+        }
+    </script>
 </body>
 
 </html>
